@@ -85,7 +85,6 @@ func (p *pathProxy) addRoute(router *mux.Router, host string, path string) *mux.
 		request.URL.Path = targetPath
 		request.URL.Scheme = "http"
 		request.URL.Host = host
-		fmt.Println(request.URL)
 	}
 
 	return router.PathPrefix(trimmedFullPath).HandlerFunc(proxy.ServeHTTP)
