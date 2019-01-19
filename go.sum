@@ -1,0 +1,11 @@
+github.com/codegangsta/negroni v1.0.0 h1:+aYywywx4bnKXWvoWtRfJ91vC59NbEhEY03sZjQhbVY=
+github.com/codegangsta/negroni v1.0.0/go.mod h1:v0y3T5G7Y1UlFfyxFn/QLRU4a2EuNau2iZY63YTKWo0=
+github.com/cssivision/reverseproxy v0.0.1 h1:IvhNE3XITZOWFhON2faKbrDeGpqa+yfessLQKSSt15U=
+github.com/cssivision/reverseproxy v0.0.1/go.mod h1:+QTeWrlVNQDAiB3pnaecTCk5rh1sS3cJltUl/+L2APg=
+github.com/gorilla/mux v1.6.1/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
+github.com/gorilla/mux v1.6.2 h1:Pgr17XVTNXAk3q/r4CpKzC5xBM/qW1uVLV+IhRZpIIk=
+github.com/gorilla/mux v1.6.2/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
+github.com/urfave/negroni v1.0.0 h1:kIimOitoypq34K7TG7DUaJ9kq/N4Ofuwi1sjz0KipXc=
+github.com/urfave/negroni v1.0.0/go.mod h1:Meg73S6kFm/4PpbYdq35yYWoCZ9mS/YSx+lKnmiohz4=
+github.com/wunderlist/moxy v0.0.0-20150319091452-029e869af045 h1:ki+ZHu89w7SU41zE+6f8IehRNQeW9wqED0bJDPHgMC8=
+github.com/wunderlist/moxy v0.0.0-20150319091452-029e869af045/go.mod h1:ZnA4JNuc3uWmYEecn8A0CNjG0ZHVISVv00zc6ZhBfmc=
