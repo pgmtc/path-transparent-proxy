@@ -5,11 +5,12 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/urfave/negroni"
 	"github.com/wunderlist/moxy"
-	"log"
 	"net/http"
 	"os"
 	"strings"
 )
+
+const DEFAULT_PORT = "8080"
 
 type routeConfig struct {
 	path string
@@ -21,19 +22,35 @@ type ProxyConfig interface {
 	GetRoutes() []routeConfig
 	GetFilters() []moxy.FilterFunc
 	GetContextPath() string
-	StripPath() bool
 }
 
 type pathProxy struct {
+	server *http.Server
 	app *negroni.Negroni
 	config ProxyConfig
 }
 
-func (p *pathProxy) StartServer() {
+func getAddr() string {
+	envPort := os.Getenv("PORT")
+	if envPort == "" {
+		envPort = DEFAULT_PORT
+	}
+	return ":" + envPort
+}
+
+func (p *pathProxy) StartServer() (returnError error) {
 	router := p.buildRouter()
 	p.app = negroni.Classic()
 	p.app.UseHandler(router)
-	p.app.Run()
+
+	server := &http.Server{Addr: getAddr()}
+	server.Handler = p.app
+	server.Addr = getAddr()
+	err := server.ListenAndServe()
+	if err != nil {
+		returnError = err
+	}
+	return
 }
 
 func PathProxy(config ProxyConfig) *pathProxy {
@@ -46,13 +63,8 @@ func PathProxy(config ProxyConfig) *pathProxy {
 func (p *pathProxy) buildRouter() *mux.Router {
 	router := mux.NewRouter()
 	router.PathPrefix("/health").HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		writer.Write([]byte("Working fine"))
+		writer.Write([]byte("{\"status\":\"UP\"}"))
 	})
-
-	if len(p.config.GetRoutes()) == 0 {
-		log.Fatal("No routes have been provided. Exiting")
-		os.Exit(1)
-	}
 	for _, route := range p.config.GetRoutes() {
 		p.addRoute(router, route.host, route.path)
 	}
@@ -81,10 +93,8 @@ func (p *pathProxy) addRoute(router *mux.Router, host string, path string) *mux.
 
 func translateTargetPath(requestUri string, contextPath string, routePath string) (targetPath string, ) {
 	targetPath = strings.Replace(requestUri, contextPath, "", 1)
-	fmt.Println(len(routePath))
-	fmt.Println(strings.Index(routePath, "/"))
 	if strings.HasSuffix(routePath, "/") {
-		targetPath = strings.Replace(targetPath, routePath, "", 1)
+		targetPath = strings.Replace(targetPath, strings.TrimSuffix(routePath, "/"), "", 1)
 	}
 	return
 }

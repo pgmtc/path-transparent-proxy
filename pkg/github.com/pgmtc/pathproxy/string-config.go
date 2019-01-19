@@ -10,11 +10,6 @@ type EnvProxyConfig struct {
 	routes []routeConfig
 	filters []moxy.FilterFunc
 	contextPath string
-	stripPath bool
-}
-
-func (e *EnvProxyConfig) StripPath() bool {
-	return e.stripPath
 }
 
 func (e *EnvProxyConfig) GetContextPath() string {
