@@ -13,8 +13,8 @@ import (
 const DEFAULT_PORT = "8080"
 
 type routeConfig struct {
-	path string
-	host string
+	path        string
+	host        string
 	contextPath string
 }
 
@@ -26,7 +26,7 @@ type ProxyConfig interface {
 
 type pathProxy struct {
 	server *http.Server
-	app *negroni.Negroni
+	app    *negroni.Negroni
 	config ProxyConfig
 }
 
@@ -55,14 +55,14 @@ func (p *pathProxy) StartServer() (returnError error) {
 
 func PathProxy(config ProxyConfig) *pathProxy {
 	pproxy := &pathProxy{
-		config:config,
+		config: config,
 	}
 	return pproxy
 }
 
 func (p *pathProxy) buildRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.PathPrefix("/health").HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+	router.PathPrefix(p.config.GetContextPath() + "/health").HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.Write([]byte("{\"status\":\"UP\"}"))
 	})
 	for _, route := range p.config.GetRoutes() {
@@ -90,11 +90,10 @@ func (p *pathProxy) addRoute(router *mux.Router, host string, path string) *mux.
 	return router.PathPrefix(trimmedFullPath).HandlerFunc(proxy.ServeHTTP)
 }
 
-func translateTargetPath(requestUri string, contextPath string, routePath string) (targetPath string, ) {
+func translateTargetPath(requestUri string, contextPath string, routePath string) (targetPath string) {
 	targetPath = strings.Replace(requestUri, contextPath, "", 1)
 	if strings.HasSuffix(routePath, "/") {
 		targetPath = strings.Replace(targetPath, strings.TrimSuffix(routePath, "/"), "", 1)
 	}
 	return
 }
-
